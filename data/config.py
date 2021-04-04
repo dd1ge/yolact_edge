@@ -492,18 +492,11 @@ fpn_base = Config({
 
 # ------------------------ FLOW DEFAULTS ------------------------ #
 flow_base = Config({
-    'selected_backbone': 0,
-    'layer_features': [128, 128, 96, 64, 32],
-    'patch_size': 3,
     'encode_layers': [[4, 1], [2], [4]],
     'encode_channels': 256,
     'fine_tune_layers': None,
-    'interpolate_upsample': False,
-    'use_computed_P3': True,
     'warp_layers': "P4P5",
-    'flow_direct_downsample': False,
     'use_spa': False,
-    'use_spa_both': False,
     'use_normalized_spa': False,
     'use_shuffle_cat': False,
     'num_groups': 1,
@@ -512,12 +505,6 @@ flow_base = Config({
     'reduce_channels': [],
     'warp_mode': 'none',
     'flow_layer': 'each',
-    'warp_target': 'feature',
-    'pred_heads_no_conflict': False,
-    'proto_net_no_conflict': False,
-    'fpn_no_conflict': False,
-    'warp_flow_layer': 'top',
-    'correlation': 'external',
     'base_backward': True,
     'feature_matching_loss': None,
     'fm_loss_loc': 'L',
@@ -798,6 +785,8 @@ yolact_base_config = coco_base_config.copy({
     'torch2trt_spa_int8': False,
     'torch2trt_flow_net': False,
     'torch2trt_flow_net_int8': False,
+
+    'use_tensorrt_safe_mode': False,
 })
 
 yolact_edge_config = yolact_base_config.copy({
@@ -854,7 +843,6 @@ yolact_edge_vid_config = yolact_edge_config.copy({
         'model': 'mini',
         'use_pseudo_gt_flow_loss': False,
         'feature_matching_loss': 'cosine',
-        'use_computed_P3': True,
         'use_spa': True,
         'fm_loss_loc': 'L+P',
     })
@@ -895,6 +883,7 @@ yolact_edge_youtubevis_config = yolact_edge_vid_config.copy({
     'lr': 5e-4,
     'lr_schedule': 'cosine',
     'max_iter': 500000,
+    'augment_expand': True,
     'flow': yolact_edge_vid_config.flow.copy({
         'warp_mode': 'none',
         'fine_tune_layers': None,
